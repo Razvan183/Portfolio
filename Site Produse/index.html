@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Transform your product images into stunning marketing visuals with AI-powered image enhancement. Professional before and after portfolio showcasing product photography transformation.">
+    <title>Product Image Enhancement Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --cream: #F5F1E8;
+            --cream-dark: #E8E2D5;
+            --brown: #8B7355;
+            --brown-dark: #6B5B43;
+            --white: #FFFFFF;
+            --text-dark: #4A3C2A;
+            --text-light: #6B5B43;
+            --border-color: rgba(139, 115, 85, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            padding: 20px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.12);
+            border: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--brown-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.4rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--brown);
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: var(--brown-dark);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.12);
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+        }
+
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: var(--white);
+            pointer-events: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background-color: var(--white);
+            cursor: ew-resize;
+            z-index: 2;
+        }
+
+        .slider-handle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background-color: var(--white);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(139, 115, 85, 0.2);
+        }
+
+        .slider-handle::after {
+            content: '↔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--brown);
+            font-size: 20px;
+        }
+
+        .slider-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .slider-overlay img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: var(--white);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(139, 115, 85, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 12px 32px rgba(139, 115, 85, 0.15);
+            border: 1px solid var(--border-color);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: var(--brown);
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 5px;
+        }
+
+        .close-button:hover {
+            color: var(--brown-dark);
+        }
+
+        .contact-info {
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--cream);
+        }
+
+        .contact-item:hover {
+            background-color: var(--cream);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 12px rgba(139, 115, 85, 0.08);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--cream);
+            border-radius: 50%;
+            margin-right: 15px;
+            color: var(--brown);
+            font-size: 20px;
+            box-shadow: 0 2px 8px rgba(139, 115, 85, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-text {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+
+        .contact-text a {
+            color: var(--brown);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-text a:hover {
+            color: var(--brown-dark);
+        }
+
+        .modal-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--brown-dark);
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+            }
+
+            .contact-text {
+                font-size: 1.1rem;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+
+            .modal-title {
+                font-size: 1.4rem;
+            }
+
+            .contact-text {
+                font-size: 1rem;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .contact-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Razvan Epure</h1>
+        <p>I transform basic product images into stunning marketing visuals using AI.</p>
+        <button class="cta-button" onclick="openModal()">Work With Me</button>
+    </header>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeModal()">&times;</button>
+            <h2 class="modal-title">Let's Work Together</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-text">
+                        <a href="mailto:your.email@example.com">epr.razvan@gmail.com</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-text">
+                        <a href="tel:+1234567890">0730 754 154</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portfolio-grid">
+        <!-- First Row -->
+        <div class="slider-container">
+            <div class="slider">
+                <img src="Sneakers/sneakers.jpg" alt="Original product photo of sneakers before enhancement">
+                <div class="slider-overlay">
+                    <img src="Sneakers/sneakers_chat.png" alt="Enhanced marketing image of sneakers with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <img src="FaceCream/facecream.jpg" alt="Original product photo of face cream before enhancement">
+                <div class="slider-overlay">
+                    <img src="FaceCream/face_cream_chat.png" alt="Enhanced marketing image of face cream with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <img src="Bottle/bottle.jpg" alt="Original product photo of bottle before enhancement">
+                <div class="slider-overlay">
+                    <img src="Bottle/bottle_chat.png" alt="Enhanced marketing image of bottle with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="slider-container">
+            <div class="slider">
+                <img src="PortofoliuProduse/candle.jpg" alt="Original product photo of candle before enhancement">
+                <div class="slider-overlay">
+                    <img src="PortofoliuProduse/candle_done.png" alt="Enhanced marketing image of candle with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <img src="PortofoliuProduse/honey.jpg" alt="Original product photo of honey before enhancement">
+                <div class="slider-overlay">
+                    <img src="PortofoliuProduse/honey_done.png" alt="Enhanced marketing image of honey with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <img src="PortofoliuProduse/phonecase.jpg" alt="Original product photo of phone case before enhancement">
+                <div class="slider-overlay">
+                    <img src="PortofoliuProduse/phonecase_done.png" alt="Enhanced marketing image of phone case with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+
+        
+        <!-- Aici is produsele pe care tre sa le mai adaug 
+        <div class="slider-container">
+            <div class="slider">
+                <img src="https://via.placeholder.com/400x300/ff0000" alt="Original product photo of red product before enhancement">
+                <div class="slider-overlay">
+                    <img src="https://via.placeholder.com/400x300/00ff00" alt="Enhanced marketing image of green product with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <img src="https://via.placeholder.com/400x300/0000ff" alt="Original product photo of blue product before enhancement">
+                <div class="slider-overlay">
+                    <img src="https://via.placeholder.com/400x300/ffff00" alt="Enhanced marketing image of yellow product with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <img src="https://via.placeholder.com/400x300/ff00ff" alt="Original product photo of purple product before enhancement">
+                <div class="slider-overlay">
+                    <img src="https://via.placeholder.com/400x300/00ffff" alt="Enhanced marketing image of cyan product with professional lighting and styling">
+                </div>
+                <div class="slider-handle"></div>
+            </div>
+            -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliders = document.querySelectorAll('.slider-container');
+
+            sliders.forEach(slider => {
+                const handle = slider.querySelector('.slider-handle');
+                const overlay = slider.querySelector('.slider-overlay');
+                let isDragging = false;
+
+                function updateSliderPosition(clientX) {
+                    const rect = slider.getBoundingClientRect();
+                    const position = (clientX - rect.left) / rect.width;
+                    const clampedPosition = Math.max(0, Math.min(1, position));
+                    
+                    handle.style.left = `${clampedPosition * 100}%`;
+                    overlay.style.clipPath = `inset(0 ${(1 - clampedPosition) * 100}% 0 0)`;
+                }
+
+                handle.addEventListener('mousedown', () => {
+                    isDragging = true;
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        updateSliderPosition(e.clientX);
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                // Touch events for mobile devices
+                handle.addEventListener('touchstart', () => {
+                    isDragging = true;
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (isDragging) {
+                        updateSliderPosition(e.touches[0].clientX);
+                    }
+                });
+
+                document.addEventListener('touchend', () => {
+                    isDragging = false;
+                });
+
+                // Initialize slider position
+                updateSliderPosition(slider.getBoundingClientRect().left + slider.getBoundingClientRect().width / 2);
+            });
+        });
+
+        // Modal functionality
+        function openModal() {
+            document.getElementById('contactModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('contactModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('contactModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html> 
